@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "./",
-  // base: '/Journal-APP/',
+  // base: "./",
+  base: '/Journal-APP/',
   plugins: [react()]
 })
