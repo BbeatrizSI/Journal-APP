@@ -14,7 +14,7 @@ export const CheckingAuth = () => {
             direction={ 'row' }
             justifyContent={ 'center' }
         >
-                <CircularProgress color='warning'/>
+                <CircularProgress color='secondary'/>
         </Grid>
     </Grid>
   )
