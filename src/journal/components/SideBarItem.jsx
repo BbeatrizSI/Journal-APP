@@ -3,6 +3,7 @@ import { TurnedInNot } from "@mui/icons-material"
 import { useMemo } from "react"
 import { setActiveNote } from "../../store/journal"
 import { useDispatch } from "react-redux"
+import { closeSidebar } from "../../store/sidebar";
 
 export const SideBarItem = ({ title = '', body, id, date, imageUrls = [] }) => {
 
@@ -10,6 +11,9 @@ export const SideBarItem = ({ title = '', body, id, date, imageUrls = [] }) => {
 
     const onClickNote = () => {
         dispatch( setActiveNote({ id, title, body, date, imageUrls }) );
+        setTimeout(() => {
+            dispatch( closeSidebar() );
+        }, 300)
     }
 
     const newTitle = useMemo( () => {
