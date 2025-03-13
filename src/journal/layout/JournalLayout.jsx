@@ -4,7 +4,7 @@ import { NavBar, SideBar } from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import { openSidebar, closeSidebar } from "../../store/sidebar";
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 export const JournalLayout = ({ children }) => {
 
@@ -18,7 +18,13 @@ export const JournalLayout = ({ children }) => {
 
         <Box 
             component='main'
-            sx={{ flexGrow: 1, p: 3 }}
+            sx={{
+              flexGrow: 1,
+              p: 3,
+              maxWidth: { sm: `calc(100% - ${drawerWidth}px)` },
+              minWidth: 0,
+              marginLeft: { sm: `${drawerWidth}px` }
+            }}
         >
             <Toolbar />
 

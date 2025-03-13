@@ -1,5 +1,6 @@
 import { Close, TurnedInNot } from "@mui/icons-material"
 import { Box, Divider, Drawer, Grid, List, IconButton, Toolbar, Typography } from "@mui/material"
+import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 import { useSelector, useDispatch } from "react-redux"
 import { SideBarItem } from "./SideBarItem";
 import { closeSidebar } from "../../store/sidebar";
@@ -16,7 +17,11 @@ export const SideBar = ({ drawerWidth = 240, mobileOpen }) => {
   return (
     <Box
         component='nav'
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        sx={{ 
+            width: { xs: '100wv' }, 
+            flexShrink: { sm: 0 },
+            opacity: 0.8
+        }}
     >
         <Drawer
             variant='temporary'
@@ -24,13 +29,16 @@ export const SideBar = ({ drawerWidth = 240, mobileOpen }) => {
             onClose={() => dispatch( closeSidebar() )}
             sx={{
                 display: { xs: 'block' },
-                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth }
+                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: '100vw' },
             }}
         >
-            <Toolbar>
-                <Typography variant='h6' noWrap component='div'>
-                    { displayName }
-                </Typography>
+            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Box display={'inline-flex'} alignItems={'center'}>
+                    <EmojiObjectsIcon color={'primary'} sx={{ fontSize: '1.7em' }}/>
+                    <Typography variant='h6' noWrap component='div' ml={2}>
+                        { displayName }
+                    </Typography>
+                </Box>
                 <IconButton onClick={ () => dispatch( closeSidebar() ) } color="inherit">
                     <Close />
                 </IconButton>
@@ -51,17 +59,18 @@ export const SideBar = ({ drawerWidth = 240, mobileOpen }) => {
             open
             sx={{
                 display: { xs: 'none', sm: 'block' },
-                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth }
+                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
             }}
         >
             <Toolbar>
-                <Typography variant='h6' noWrap component='div'>
+                <EmojiObjectsIcon color={'primary'} sx={{ fontSize: '1.7em' }}/>
+                <Typography variant='h6' noWrap component='div' ml={1}>
                     { displayName }
                 </Typography>
             </Toolbar>
             <Divider />
 
-            <List>
+            <List sx={{ paddingRight: '5px'}}>
                 {
                     sortedNotes.map( note => (
                         <SideBarItem key={ note.id } { ...note } />

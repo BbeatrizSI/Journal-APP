@@ -79,7 +79,9 @@ export const LoginPage = () => {
                       disabled={ isAuthenticated }
                       type="submit" 
                       variant='contained' 
-                      fullWidth>
+                      fullWidth
+                      sx={{ pt: 1.5 , pb: 1 }}
+                  >
                     Login
                   </Button>
                 </Grid>
@@ -88,7 +90,9 @@ export const LoginPage = () => {
                       disabled={ isAuthenticated }
                       variant='contained' 
                       fullWidth
-                      onClick={ onGoogleSignIn }>
+                      onClick={ onGoogleSignIn }
+                      sx={{ pt: 1.5 , pb: 1 }}
+                  >  
                     <Google />
                     <Typography sx={{ ml: 1 }}>Google</Typography>
                   </Button>

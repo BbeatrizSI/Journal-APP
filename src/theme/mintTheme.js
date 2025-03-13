@@ -11,6 +11,9 @@ export const mintTheme = createTheme({
         },
         error: {
             main: red.A400
+        },
+        white: {
+            main: '#FFFFFF'
         }
     }
 })

@@ -4,6 +4,7 @@ import { JournalLayout } from "../layout/JournalLayout";
 import { NoteView, NothingSelectedView } from "../views";
 import { useDispatch, useSelector } from "react-redux";
 import { startNewNote } from "../../store/journal/thunks";
+import { alpha } from '@mui/system';
 
 
 export const JournalPage = () => {
@@ -29,14 +30,19 @@ export const JournalPage = () => {
         onClick={ onClickNewNote }
         size='large'
         disabled={ isSaving }
-        sx={{
-          color: 'white',
-          backgroundColor: 'error.main',
-          ':hover': { backgroundColor: 'error.main', opacity: 0.8 },
+        sx={(theme) => ({
+          color: theme.palette.white.main,
+          backgroundColor: 'secondary.main',
+          transition: 'all 0.3s ease-in-out',
+          '&:hover': {
+                color: theme.palette.secondary.main,
+                backgroundColor: alpha(theme.palette.secondary.main, 0.3), 
+                transform: 'scale(1.1)'
+          },
           position: 'fixed',
-          right: 50,
-          bottom: 50
-        }}
+          right: { xs: '1.5em', sm: '2em'},
+          bottom: { xs: '1.5em', sm: '2em'}
+        })}
       >
         <AddOutlined sx={{ fontSize: 30 }}/>
       </IconButton>
