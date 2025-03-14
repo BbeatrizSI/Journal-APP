@@ -9,6 +9,8 @@ import Swal from 'sweetalert2'
 import 'sweetalert2/dist/sweetalert2.css'
 import { alpha } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
+import { addSentiment } from "../../store/sentiments";
+import { analyzeSentiment } from "../../helpers";
 
 
 export const NoteView = () => {
@@ -19,6 +21,7 @@ export const NoteView = () => {
     const { body, title, date, onInputChange, formState } = useForm( note )
 
     const [openDialog, setOpenDialog] = useState(false);
+    const [analysis, setAnalysis] = useState(null);
 
     const theme = useTheme();
 
@@ -35,6 +38,12 @@ export const NoteView = () => {
     }, [date]);
 
     const fileInputRef = useRef();
+
+    useEffect(() => {
+      console.log(analysis);
+      
+    }, [analysis])
+    
 
     useEffect(() => {
         dispatch( setActiveNote( formState ) );
@@ -63,8 +72,23 @@ export const NoteView = () => {
 
     const onDelete = () => {
         setOpenDialog(true);
-        // dispatch( startDeletingNote() );
     }
+
+    // Función para analizar el sentimiento de la nota
+    const handleAnalyze = async () => {
+        const result = await analyzeSentiment(body);
+
+        // Extraemos la etiqueta (POSITIVE, NEUTRAL o NEGATIVE)
+        let sentimentLabel = result.includes("positivo") ? "POSITIVE"
+                         : result.includes("neutro") ? "NEUTRAL"
+                         : "NEGATIVE";
+
+        // Guardamos en Redux
+        dispatch(addSentiment(sentimentLabel));
+
+        // Mostramos el análisis en pantalla
+        setAnalysis(result);
+    };
     
 
   return (
@@ -149,6 +173,24 @@ export const NoteView = () => {
         </Grid>
 
         <Grid container justifyContent='end' mt={2}>
+            <Button 
+                disabled={ isSaving }
+                onClick={ handleAnalyze }
+                color='primary' 
+                sx={(theme) => ({
+                    transition: 'all 0.2s ease-in-out',
+                    '&:hover': {
+                        backgroundColor: alpha(theme.palette.primary.main, 0.2), 
+                        transform: 'scale(1.1)'
+                    },
+                    borderRadius: '10px',
+                    paddingRight: '1em',
+                    marginRight: '1em'
+                })}
+            >
+                <SaveOutlined sx={{ fontSize: '2em', mr: 1 }} />
+                Analizar
+            </Button>
             <Button 
                 disabled={ isSaving }
                 onClick={ onSaveNote }

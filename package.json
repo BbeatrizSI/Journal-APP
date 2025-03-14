@@ -17,6 +17,7 @@
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.3",
     "@reduxjs/toolkit": "^1.9.3",
+    "axios": "^1.8.3",
     "firebase": "^9.17.2",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",

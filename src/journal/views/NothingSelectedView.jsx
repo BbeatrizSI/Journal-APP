@@ -15,7 +15,7 @@ export const NothingSelectedView = () => {
       sx={{ minHeight: 'calc(100vh - 110px)', backgroundColor: 'primary.main', borderRadius: 3 }}
     >
       <Grid item xs={ 12 }>
-        <TipsAndUpdatesIcon sx={{ fontSize: 100, color: 'white.main' }}/>
+        <TipsAndUpdatesIcon sx={{ fontSize: 100, color: 'white.main', paddingLeft: 2 }}/>
       </Grid>
       <Grid item xs={ 12 }>
         <Typography color='white.main' variant='h5'>Selecciona o crea una entrada</Typography>
