@@ -3,7 +3,7 @@ import { Button, Grid, IconButton, TextField, Typography } from '@mui/material'
 import { ImageGallery, DeleteNoteDialog } from '../components'
 import { useForm } from '../../hooks/useForm'
 import { useSelector, useDispatch } from 'react-redux'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { setActiveNote, startSaveNote, startUploadingFiles } from '../../store/journal'
 import Swal from 'sweetalert2'
 import 'sweetalert2/dist/sweetalert2.css'
@@ -75,20 +75,18 @@ export const NoteView = () => {
     }
 
     // Función para analizar el sentimiento de la nota
-    const handleAnalyze = async () => {
+    const handleAnalyze = useCallback(async () => {
+        if (!body.trim()) return; // Evita llamadas innecesarias con un texto vacío
+    
         const result = await analyzeSentiment(body);
-
-        // Extraemos la etiqueta (POSITIVE, NEUTRAL o NEGATIVE)
+    
         let sentimentLabel = result.includes("positivo") ? "POSITIVE"
                          : result.includes("neutro") ? "NEUTRAL"
                          : "NEGATIVE";
-
-        // Guardamos en Redux
+    
         dispatch(addSentiment(sentimentLabel));
-
-        // Mostramos el análisis en pantalla
         setAnalysis(result);
-    };
+    }, [body, dispatch]);
     
 
   return (
