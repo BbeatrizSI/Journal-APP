@@ -1,4 +1,4 @@
-import { Grid, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
+import { Grid, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material"
 import DescriptionIcon from '@mui/icons-material/Description';
 import { useMemo } from "react"
 import { setActiveNote } from "../../store/journal"
@@ -8,6 +8,18 @@ import { closeSidebar } from "../../store/sidebar";
 export const SideBarItem = ({ title = '', body, id, date, imageUrls = [] }) => {
 
     const dispatch = useDispatch();
+
+    const dateString = useMemo(() => {
+        const newDate = new Date(date);
+        const formattedDate = newDate.toLocaleDateString('es-ES', {
+            weekday: 'short', 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric' 
+        });
+    
+        return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+    }, [date]);
 
     const onClickNote = () => {
         dispatch( setActiveNote({ id, title, body, date, imageUrls }) );
@@ -35,7 +47,16 @@ export const SideBarItem = ({ title = '', body, id, date, imageUrls = [] }) => {
                 <DescriptionIcon color={'secondary'}/>
             </ListItemIcon>
             <Grid container>
-                <ListItemText primary={ newTitle } />
+                <ListItemText 
+                    primary={ 
+                        <>
+                            { newTitle }
+                            <Typography variant="caption" color="gray" display="block">
+                                { dateString }
+                            </Typography>
+                        </>
+                    } 
+                />
                 <ListItemText secondary={ newBody } />
             </Grid>
         </ListItemButton>

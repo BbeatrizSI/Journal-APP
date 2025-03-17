@@ -8,10 +8,14 @@ export const analyzeSentiment = async (text) => {
     const prompt = `
         Analiza el siguiente texto y determina si es positivo, negativo o neutro.
         Si es negativo, explica por qué en un párrafo. Si es positivo, destaca el motivo por el que lo es. Si es neutro o negativo, ofrece una frase de ánimo o bonita.
-        Necesito la siguiente estructura:
-        1. Etiqueta (POSITIVE, NEUTRAL o NEGATIVE)
-        2. Explicación
-        3. Frase
+        
+        Devuélveme exclusivamente un JSON con la siguiente estructura:
+        {
+            "etiqueta": "POSITIVE | NEUTRAL | NEGATIVE",
+            "explicacion": "Explicación del análisis del texto.",
+            "frase": "Una frase de ánimo o relevante al análisis."
+        }
+
         Texto: "${text}"
     `;
 

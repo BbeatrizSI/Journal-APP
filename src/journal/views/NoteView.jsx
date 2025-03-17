@@ -1,5 +1,5 @@
-import { DeleteOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material'
-import { Button, Grid, IconButton, TextField, Typography } from '@mui/material'
+import { DeleteOutline, SaveOutlined, UploadOutlined, PsychologyAlt } from '@mui/icons-material'
+import { Button, Grid, IconButton, TextField, Typography, Box } from '@mui/material'
 import { ImageGallery, DeleteNoteDialog } from '../components'
 import { useForm } from '../../hooks/useForm'
 import { useSelector, useDispatch } from 'react-redux'
@@ -8,7 +8,7 @@ import { setActiveNote, startSaveNote, startUploadingFiles } from '../../store/j
 import Swal from 'sweetalert2'
 import 'sweetalert2/dist/sweetalert2.css'
 import { alpha } from '@mui/system';
-import { useTheme } from '@mui/material/styles';
+import { useMediaQuery, useTheme } from '@mui/material';
 import { addSentiment } from "../../store/sentiments";
 import { analyzeSentiment } from "../../helpers";
 
@@ -21,9 +21,11 @@ export const NoteView = () => {
     const { body, title, date, onInputChange, formState } = useForm( note )
 
     const [openDialog, setOpenDialog] = useState(false);
-    const [analysis, setAnalysis] = useState(null);
+    const [analysis, setAnalysis] = useState({});
 
     const theme = useTheme();
+
+    const isMdOrLarger = useMediaQuery(theme.breakpoints.up('md'));
 
     const dateString = useMemo(() => {
         const newDate = new Date(date);
@@ -37,13 +39,7 @@ export const NoteView = () => {
         return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
     }, [date]);
 
-    const fileInputRef = useRef();
-
-    useEffect(() => {
-      console.log(analysis);
-      
-    }, [analysis])
-    
+    const fileInputRef = useRef();   
 
     useEffect(() => {
         dispatch( setActiveNote( formState ) );
@@ -78,17 +74,23 @@ export const NoteView = () => {
     const handleAnalyze = useCallback(async () => {
         if (!body.trim()) return; // Evita llamadas innecesarias con un texto vacío
     
-        const result = await analyzeSentiment(body);
+        const resultText = await analyzeSentiment(body);
+        const result = resultText.replace(/^```json\s*/, "").replace(/```/g, "");
     
-        let sentimentLabel = result.includes("positivo") ? "POSITIVE"
-                         : result.includes("neutro") ? "NEUTRAL"
-                         : "NEGATIVE";
+        try {
+            const resultJSON = JSON.parse(result);
+            console.log(resultJSON);
     
-        dispatch(addSentiment(sentimentLabel));
-        setAnalysis(result);
-    }, [body, dispatch]);
+            const sentimentLabel = resultJSON.etiqueta;
+            dispatch(addSentiment(sentimentLabel));
     
-
+            // ✅ Guardamos como OBJETO, no como string
+            setAnalysis(resultJSON);
+        } catch (error) {
+            console.error("Error al parsear el JSON:", error);
+        }
+    }, [body]);
+    
   return (
     <Grid 
         container 
@@ -170,61 +172,79 @@ export const NoteView = () => {
             />
         </Grid>
 
-        <Grid container justifyContent='end' mt={2}>
+        <Grid container justifyContent='space-between' mt={2}>
             <Button 
                 disabled={ isSaving }
                 onClick={ handleAnalyze }
-                color='primary' 
+                color='secondary' 
                 sx={(theme) => ({
                     transition: 'all 0.2s ease-in-out',
                     '&:hover': {
-                        backgroundColor: alpha(theme.palette.primary.main, 0.2), 
+                        backgroundColor: alpha(theme.palette.secondary.main, 0.2), 
                         transform: 'scale(1.1)'
                     },
                     borderRadius: '10px',
-                    paddingRight: '1em',
-                    marginRight: '1em'
+                    paddingRight: { xs: 0, md: '1em' },
+                    marginRight: { xs: 0, md: '1em' }
                 })}
             >
-                <SaveOutlined sx={{ fontSize: '2em', mr: 1 }} />
-                Analizar
+                <PsychologyAlt sx={{ fontSize: '2em', mr: { xs: 0.5, md: 1 } }} />
+                {isMdOrLarger && 'Analizar'}
             </Button>
-            <Button 
-                disabled={ isSaving }
-                onClick={ onSaveNote }
-                color='primary' 
-                sx={(theme) => ({
-                    transition: 'all 0.2s ease-in-out',
-                    '&:hover': {
-                        backgroundColor: alpha(theme.palette.primary.main, 0.2), 
-                        transform: 'scale(1.1)'
-                    },
-                    borderRadius: '10px',
-                    paddingRight: '1em',
-                    marginRight: '1em'
-                })}
-            >
-                <SaveOutlined sx={{ fontSize: '2em', mr: 1 }} />
-                Guardar
-            </Button>
+            <Box>
+                <Button 
+                    disabled={ isSaving }
+                    onClick={ onSaveNote }
+                    color='primary' 
+                    sx={(theme) => ({
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': {
+                            backgroundColor: alpha(theme.palette.primary.main, 0.2), 
+                            transform: 'scale(1.1)'
+                        },
+                        borderRadius: '10px',
+                        paddingRight: '1em',
+                        marginRight: { xs: 0, md: '1em' }
+                    })}
+                >
+                    <SaveOutlined sx={{ fontSize: '2em', mr: { xs: 0.5, md: 1 } }} />
+                    Guardar
+                </Button>
 
-            <Button
-                onClick={ onDelete }
-                color="error"
-                sx={(theme) => ({
-                    transition: 'all 0.2s ease-in-out',
-                    '&:hover': {
-                        backgroundColor: alpha(theme.palette.error.main, 0.1), 
-                        transform: 'scale(1.1)'
-                    },
-                    borderRadius: '10px',
-                    paddingRight: '1em'
-                })}
-            >
-                <DeleteOutline sx={{ fontSize: '2em', mr: 1 }} />
-                Borrar
-            </Button>
+                <Button
+                    onClick={ onDelete }
+                    color="error"
+                    sx={(theme) => ({
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': {
+                            backgroundColor: alpha(theme.palette.error.main, 0.1), 
+                            transform: 'scale(1.1)'
+                        },
+                        borderRadius: '10px',
+                        paddingRight: '1em'
+                    })}
+                >
+                    <DeleteOutline sx={{ fontSize: '2em', mr: { xs: 0.5, md: 1 } }} />
+                    Borrar
+                </Button>
+            </Box>
         </Grid>
+        { analysis !== null && (
+            <Grid container sx={{ mt: 2 }}>
+                <Grid item xs={ 12 }>
+                    <Typography variant='h6'>Mi opinión:</Typography>
+                </Grid>
+                <Grid item xs={ 12 }>
+                    <Typography>{ analysis.explicacion }</Typography>
+                </Grid>
+                <Grid item xs={ 12 }>
+                    <Typography variant='h6'>Frase:</Typography>
+                </Grid>
+                <Grid item xs={ 12 }>
+                    <Typography>{ analysis.frase }</Typography>
+                </Grid>
+            </Grid>
+        )}
 
         <ImageGallery images={ note.imageUrls } />
     </Grid>
