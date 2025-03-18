@@ -23,6 +23,10 @@ export const NoteView = () => {
     const [openDialog, setOpenDialog] = useState(false);
     const [analysis, setAnalysis] = useState({});
 
+    useEffect(() => {
+        setAnalysis({}); // Resetea el análisis al cambiar de nota
+    }, [note]);
+
     const theme = useTheme();
 
     const isMdOrLarger = useMediaQuery(theme.breakpoints.up('md'));
@@ -229,21 +233,44 @@ export const NoteView = () => {
                 </Button>
             </Box>
         </Grid>
-        { analysis !== null && (
-            <Grid container sx={{ mt: 2 }}>
-                <Grid item xs={ 12 }>
-                    <Typography variant='h6'>Mi opinión:</Typography>
+        { !!analysis?.etiqueta && (
+            <Box
+                sx={{
+                    position: "relative", // Necesario para que ::after se posicione correctamente
+                    mt: 3,
+                    border: `2px solid ${theme.palette.secondary.main}`,
+                    backgroundColor: "#f0f0f0",
+                    padding: 2,
+                    borderRadius: "16px",
+                    maxWidth: { xs: "100%", md: "600px" }, 
+                    "&::after": {
+                        content: '""',
+                        position: "absolute",
+                        top: "-15px", // Ubica el piquito fuera del div
+                        left: { xs: "17px", md: "6px" },
+                        width: 0,
+                        height: 0,
+                        borderStyle: "solid",
+                        borderWidth: "0 15px 15px 15px", // Triángulo
+                        borderColor: `transparent transparent ${theme.palette.secondary.main} transparent`,
+                    },
+                }}
+            >
+                <Grid container>
+                    <Grid item xs={12} mb={1}>
+                        <Typography variant="subtitle2">Mi opinión:</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="body2" mb={2} sx={{ textAlign: "justify", textIndent: "1.5em"}}>{analysis.explicacion}</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="subtitle2" mb={1}>Frase:</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="body2" sx={{ textAlign: "justify", textIndent: "1.5em" }}>{analysis.frase}</Typography>
+                    </Grid>
                 </Grid>
-                <Grid item xs={ 12 }>
-                    <Typography>{ analysis.explicacion }</Typography>
-                </Grid>
-                <Grid item xs={ 12 }>
-                    <Typography variant='h6'>Frase:</Typography>
-                </Grid>
-                <Grid item xs={ 12 }>
-                    <Typography>{ analysis.frase }</Typography>
-                </Grid>
-            </Grid>
+            </Box>
         )}
 
         <ImageGallery images={ note.imageUrls } />
