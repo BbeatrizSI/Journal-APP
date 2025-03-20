@@ -7,6 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
+      injectRegister: 'auto', // Agrega esto para que el SW se registre bien
       manifest: {
         name: "Journal-APP",
         short_name: "Journal-APP",
@@ -14,7 +15,7 @@ export default defineConfig({
         start_url: "/",
         display: "standalone",
         background_color: "#ffffff",
-        theme_color: "#1976d2",
+        theme_color: "#55c49c",
         icons: [
           {
             src: "/icons/logo192.png",
@@ -27,8 +28,12 @@ export default defineConfig({
             type: "image/png"
           }
         ]
+      },
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,png,svg,json,webmanifest}"]
       }
     })
   ],
-  base: '/Journal-APP/'
+  base: '/' // ⚠️ Cambiado para Firebase Hosting
+  // base: '/Journal-APP/' // ⚠️ Esto sería para GitHub Pages
 })
