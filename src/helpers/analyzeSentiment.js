@@ -1,8 +1,25 @@
 import axios from "axios";
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+// const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY; // Para GitHub Pages
+const getApiKey = async () => {
+    try {
+        const response = await fetch("/config.json");
+        const data = await response.json();
+        return data.gemini_api_key;
+    } catch (error) {
+        console.error("Error al obtener la API Key:", error);
+        return null; // Devuelve null en caso de error
+    }
+};
 
 export const analyzeSentiment = async (text) => {
+    const apiKey = await getApiKey(); // Obtenemos la API Key antes de hacer la petición
+
+    if (!apiKey) {
+        console.error("API Key no encontrada.");
+        return "Error: No se pudo obtener la API Key.";
+    }
+    
     const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
     const prompt = `

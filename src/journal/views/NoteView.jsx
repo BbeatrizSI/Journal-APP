@@ -83,8 +83,7 @@ export const NoteView = () => {
     
         try {
             const resultJSON = JSON.parse(result);
-            console.log(resultJSON);
-    
+              
             const sentimentLabel = resultJSON.etiqueta;
             dispatch(addSentiment(sentimentLabel));
     
