@@ -1,4 +1,4 @@
-import { DeleteOutline, SaveOutlined, UploadOutlined, PsychologyAlt } from '@mui/icons-material'
+import { DeleteOutline, SaveOutlined, UploadOutlined, PsychologyAlt, CloseOutlined  } from '@mui/icons-material'
 import { Button, Grid, IconButton, TextField, Typography, Box } from '@mui/material'
 import { ImageGallery, DeleteNoteDialog } from '../components'
 import { useForm } from '../../hooks/useForm'
@@ -238,33 +238,49 @@ export const NoteView = () => {
                 sx={{
                     position: "relative", // Necesario para que ::after se posicione correctamente
                     mt: 3,
-                    border: `2px solid ${theme.palette.secondary.main}`,
+                    mb: 5,
+                    border: `2px solid #C4577D`,
                     backgroundColor: "#f0f0f0",
                     padding: 2,
                     borderRadius: "16px",
                     maxWidth: { xs: "100%", md: "600px" }, 
+                    zIndex: 100,
                     "&::after": {
                         content: '""',
                         position: "absolute",
-                        top: "-15px", // Ubica el piquito fuera del div
+                        top: "-15px", 
                         left: { xs: "17px", md: "6px" },
                         width: 0,
                         height: 0,
                         borderStyle: "solid",
-                        borderWidth: "0 15px 15px 15px", // Triángulo
-                        borderColor: `transparent transparent ${theme.palette.secondary.main} transparent`,
+                        borderWidth: "0 15px 15px 15px", 
+                        borderColor: `transparent transparent #C4577D transparent`,
                     },
                 }}
             >
-                <Grid container>
+                <IconButton 
+                    onClick={() => setAnalysis({})} 
+                    sx={{
+                        position: "absolute",
+                        top: 2,  
+                        right: 5, 
+                        color: "#C4577D",
+                        "&:hover": {
+                            backgroundColor: "rgba(196, 87, 125, 0.2)"
+                        }
+                    }}
+                >
+                    <CloseOutlined />
+                </IconButton>
+                <Grid container mb={2}>
                     <Grid item xs={12} mb={1}>
-                        <Typography variant="subtitle2">Mi opinión:</Typography>
+                        <Typography variant="subtitle2">Análisis:</Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant="body2" mb={2} sx={{ textAlign: "justify", textIndent: "1.5em"}}>{analysis.explicacion}</Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography variant="subtitle2" mb={1}>Frase:</Typography>
+                        <Typography variant="subtitle2" mb={1}>Recuerda:</Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant="body2" sx={{ textAlign: "justify", textIndent: "1.5em" }}>{analysis.frase}</Typography>
