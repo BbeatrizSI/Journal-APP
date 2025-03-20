@@ -8,9 +8,9 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       manifest: {
-        name: "Mi Aplicación",
-        short_name: "MiApp",
-        description: "Una PWA creada con React",
+        name: "Journal-APP",
+        short_name: "Journal-APP",
+        description: "Escribe un diario y averigua cómo te tratas.",
         start_url: "/",
         display: "standalone",
         background_color: "#ffffff",
