@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, up
 import { FirebaseAuth } from "./config";
 
 const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: "select_account" });
 
 export const singInWithGoogle = async() => {
     try {
@@ -38,7 +39,6 @@ export const registerUserWithEmailPassword = async({ email, password, displayNam
         }
 
     } catch (error) {
-        console.log(error);
         return { ok: false, errorMessage: error.message }
     }
 }

@@ -179,8 +179,9 @@ export const NoteView = () => {
 
         <Grid container justifyContent='space-between' mt={2}>
             <Button 
-                disabled={ isSaving }
+                disabled={ isSaving || body.length == 0 || analysis == {} }
                 onClick={ handleAnalyze }
+                variant="outlined"
                 color='secondary' 
                 sx={(theme) => ({
                     transition: 'all 0.2s ease-in-out',
@@ -189,11 +190,11 @@ export const NoteView = () => {
                         transform: 'scale(1.1)'
                     },
                     borderRadius: '10px',
-                    paddingRight: { xs: 0, md: '1em' },
+                    paddingX: { xs: 0, md: '1em' },
                     marginRight: { xs: 0, md: '1em' }
                 })}
             >
-                <PsychologyAlt sx={{ fontSize: '2em', mr: { xs: 0.5, md: 1 } }} />
+                <PsychologyAlt sx={{ fontSize: '2em', mr: { xs: 0.5, md: 0.5 } }} />
                 {isMdOrLarger && 'Analizar'}
             </Button>
             <Box>

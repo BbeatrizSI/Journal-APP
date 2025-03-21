@@ -48,7 +48,7 @@ export const RegisterPage = () => {
                 <TextField 
                   label="Nombre completo" 
                   type="text" 
-                  placeholder="Bárbara Sacristán" 
+                  placeholder="Nombre" 
                   fullWidth
                   name="displayName"
                   value={ displayName }
@@ -61,7 +61,7 @@ export const RegisterPage = () => {
                 <TextField 
                   label="Correo" 
                   type="email" 
-                  placeholder="correo@email.com" 
+                  placeholder="Correo" 
                   fullWidth
                   name="email"
                   value={ email }
