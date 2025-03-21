@@ -78,7 +78,9 @@ export const NoteView = () => {
     const handleAnalyze = useCallback(async () => {
         if (!body.trim()) return; // Evita llamadas innecesarias con un texto vacío
     
-        const resultText = await analyzeSentiment(body);
+        const response = await analyzeSentiment(body);
+        const resultText =response?.candidates[0]?.content?.parts[0]?.text;
+        
         const result = resultText.replace(/^```json\s*/, "").replace(/```/g, "");
     
         try {
