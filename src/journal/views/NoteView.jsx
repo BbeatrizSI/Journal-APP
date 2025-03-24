@@ -40,7 +40,12 @@ export const NoteView = () => {
             day: 'numeric' 
         });
     
-        return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+        const formattedTime = newDate.toLocaleTimeString('es-ES', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    
+        return `${formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1)}, ${formattedTime}`;
     }, [date]);
 
     const fileInputRef = useRef();   

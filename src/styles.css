@@ -1,3 +1,12 @@
 .box-shadow {
     box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
 }
+
+.highlight-day abbr {
+    border-bottom: 4px solid #55c49c;
+    padding-bottom: 2px;
+    border-radius: 1px;
+}
+  
+  
+  

@@ -1,9 +1,13 @@
-import { Close, TurnedInNot } from "@mui/icons-material"
-import { Box, Divider, Drawer, Grid, List, IconButton, Toolbar, Typography } from "@mui/material"
+import { useState } from "react";
+import { Close, TurnedInNot } from "@mui/icons-material";
+import { Box, Divider, Drawer, Grid, List, IconButton, Toolbar, Typography } from "@mui/material";
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 import { useSelector, useDispatch } from "react-redux"
 import { SideBarItem } from "./SideBarItem";
 import { closeSidebar } from "../../store/sidebar";
+import DatePicker from 'react-date-picker';
+import 'react-date-picker/dist/DatePicker.css';
+import 'react-calendar/dist/Calendar.css';
 
 
 export const SideBar = ({ drawerWidth = 240, mobileOpen }) => {
@@ -11,8 +15,23 @@ export const SideBar = ({ drawerWidth = 240, mobileOpen }) => {
     const dispatch = useDispatch();
     const { displayName } = useSelector( state => state.auth );
     const { notes } = useSelector( state => state.journal );
+    const [value, setValue] = useState(new Date());
+
+    const isSameDay = (date1, date2) => {
+        const d1 = new Date(date1);
+        const d2 = new Date(date2);
+        return (
+            d1.getFullYear() === d2.getFullYear() &&
+            d1.getMonth() === d2.getMonth() &&
+            d1.getDate() === d2.getDate()
+        );
+    };
 
     const sortedNotes = [...notes].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    const filteredNotes = value 
+    ? sortedNotes.filter(note => isSameDay(note.date, value))
+    : sortedNotes;
 
   return (
     <Box
@@ -32,22 +51,62 @@ export const SideBar = ({ drawerWidth = 240, mobileOpen }) => {
                 '& .MuiDrawer-paper': { boxSizing: 'border-box', width: '100vw' },
             }}
         >
-            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5em' }}>                
                 <Box display={'inline-flex'} alignItems={'center'}>
                     <EmojiObjectsIcon color={'primary'} sx={{ fontSize: '1.7em' }}/>
                     <Typography variant='h6' noWrap component='div' ml={2}>
-                        { displayName }
+                        { displayName.length > 20
+                        ? displayName.substring( 0, 20 ) + '...'
+                        : displayName }
                     </Typography>
                 </Box>
-                <IconButton onClick={ () => dispatch( closeSidebar() ) } color="inherit">
-                    <Close />
-                </IconButton>
+                <Box display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'space-around'} height={'5em'}>
+                    <IconButton onClick={ () => dispatch( closeSidebar() ) } color="inherit" sx={{ alignSelf: 'flex-end'}}>
+                        <Close />
+                    </IconButton>
+                    <DatePicker 
+                        onChange={setValue} 
+                        value={value} 
+                        calendarProps={{
+                            tileClassName: ({ date, view }) => {
+                              if (view === 'month') {
+                                const hasNote = notes.some(note =>
+                                  new Date(note.date).toDateString() === date.toDateString()
+                                );
+                                return hasNote ? 'highlight-day' : null;
+                              }
+                            }
+                        }}
+                    />
+                </Box>
             </Toolbar>
+    
             <Divider />
-
+    
+            <Box 
+                sx={{ 
+                    display: value === null ? 'none' : 'flex', 
+                    justifyContent: 'flex-start', 
+                    alignItems: 'center', 
+                    margin: '0.5em 0em 0em 0.5em',
+                    paddingLeft: '1em',
+                }}
+            >
+                <Typography variant='subtitle2'>
+                    {value?.toLocaleDateString('es-ES', {
+                        weekday: 'short',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    })}
+                </Typography>
+                <IconButton onClick={ () => setValue(null) } sx={{ display: value === null ? 'none' : 'block'}}>
+                    <Close color="#c4557d"/>
+                </IconButton>
+            </Box>
             <List>
                 {
-                    sortedNotes.map( note => (
+                    filteredNotes.map( note => (
                         <SideBarItem key={ note.id } { ...note } />
                     ))
                 }
@@ -62,17 +121,53 @@ export const SideBar = ({ drawerWidth = 240, mobileOpen }) => {
                 '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
             }}
         >
-            <Toolbar>
+            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5em', padding: '0.5em !important' }}>
                 <EmojiObjectsIcon color={'primary'} sx={{ fontSize: '1.7em' }}/>
                 <Typography variant='h6' noWrap component='div' ml={1}>
-                    { displayName }
+                    { displayName.length > 20
+                    ? displayName.substring( 0, 20 ) + '...'
+                    : displayName }
                 </Typography>
+                <DatePicker 
+                    onChange={setValue} 
+                    value={value} 
+                    calendarProps={{
+                        tileClassName: ({ date, view }) => {
+                          if (view === 'month') {
+                            const hasNote = notes.some(note =>
+                              new Date(note.date).toDateString() === date.toDateString()
+                            );
+                            return hasNote ? 'highlight-day' : null;
+                          }
+                        }
+                    }}
+                />
             </Toolbar>
             <Divider />
-
+            <Box 
+                sx={{ 
+                    display: value === null ? 'none' : 'flex', 
+                    justifyContent: 'flex-start', 
+                    alignItems: 'center', 
+                    margin: '0.5em 0em 0em 0.5em',
+                    paddingLeft: '1em',
+                }}
+            >
+                <Typography variant='subtitle2'>
+                    {value?.toLocaleDateString('es-ES', {
+                        weekday: 'short',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    })}
+                </Typography>
+                <IconButton onClick={ () => setValue(null) } sx={{ display: value === null ? 'none' : 'block'}}>
+                    <Close color="#c4557d"/>
+                </IconButton>
+            </Box>           
             <List sx={{ paddingRight: '5px'}}>
                 {
-                    sortedNotes.map( note => (
+                    filteredNotes.map( note => (
                         <SideBarItem key={ note.id } { ...note } />
                     ))
                 }

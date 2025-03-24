@@ -12,13 +12,18 @@ export const SideBarItem = ({ title = '', body, id, date, imageUrls = [] }) => {
     const dateString = useMemo(() => {
         const newDate = new Date(date);
         const formattedDate = newDate.toLocaleDateString('es-ES', {
-            weekday: 'short', 
+            weekday: 'long', 
             year: 'numeric', 
-            month: 'short', 
+            month: 'long', 
             day: 'numeric' 
         });
     
-        return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+        const formattedTime = newDate.toLocaleTimeString('es-ES', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    
+        return `${formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1)}, ${formattedTime}`;
     }, [date]);
 
     const onClickNote = () => {
