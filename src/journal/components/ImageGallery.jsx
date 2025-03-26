@@ -1,8 +1,11 @@
-import { ImageList, ImageListItem } from '@mui/material';
+import { ImageList, ImageListItem, useMediaQuery, useTheme } from '@mui/material';
 
 export const ImageGallery = ({ images }) => {
+  const theme = useTheme();
+  const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
+
   return (
-    <ImageList sx={{ width: '100%' , height: 'auto' }} cols={4} rowHeight={200}>
+    <ImageList sx={{ width: '100%' , height: '100%' }} cols={isMdUp ? 4 : 2} rowHeight={200}>
       { images?.map((image, i) => (
         <ImageListItem key={i}>
           <img

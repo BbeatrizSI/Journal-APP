@@ -34,14 +34,17 @@ export const JournalPage = () => {
           color: theme.palette.white.main,
           backgroundColor: 'secondary.main',
           transition: 'all 0.3s ease-in-out',
+          position: 'fixed',
+          right: {xs: 'auto', sm: '2em'},
+          left: {xs: '50%', sm: 'auto'},
+          bottom: { xs: '2.8em', sm: '2em'},
+          transform: 'translateX(-50%)',
+          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.25)',
           '&:hover': {
                 color: theme.palette.secondary.main,
                 backgroundColor: alpha(theme.palette.secondary.main, 0.3), 
                 transform: 'scale(1.1)'
           },
-          position: 'fixed',
-          right: { xs: '1.5em', sm: '2em'},
-          bottom: { xs: '1.5em', sm: '2em'}
         })}
       >
         <AddOutlined sx={{ fontSize: 30 }}/>

@@ -15,7 +15,7 @@ export const SideBar = ({ drawerWidth = 240, mobileOpen }) => {
     const dispatch = useDispatch();
     const { displayName } = useSelector( state => state.auth );
     const { notes } = useSelector( state => state.journal );
-    const [value, setValue] = useState(new Date());
+    const [value, setValue] = useState(null);
 
     const isSameDay = (date1, date2) => {
         const d1 = new Date(date1);

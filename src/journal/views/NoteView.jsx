@@ -1,4 +1,5 @@
 import { DeleteOutline, SaveOutlined, UploadOutlined, PsychologyAlt, CloseOutlined  } from '@mui/icons-material'
+import { CircularProgress } from '@mui/material';
 import { Button, Grid, IconButton, TextField, Typography, Box } from '@mui/material'
 import { ImageGallery, DeleteNoteDialog } from '../components'
 import { useForm } from '../../hooks/useForm'
@@ -22,6 +23,7 @@ export const NoteView = () => {
 
     const [openDialog, setOpenDialog] = useState(false);
     const [analysis, setAnalysis] = useState({});
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
 
     useEffect(() => {
         setAnalysis({}); // Resetea el análisis al cambiar de nota
@@ -82,6 +84,7 @@ export const NoteView = () => {
     // Función para analizar el sentimiento de la nota
     const handleAnalyze = useCallback(async () => {
         if (!body.trim()) return; // Evita llamadas innecesarias con un texto vacío
+        setIsAnalyzing(true);
     
         const response = await analyzeSentiment(body);
         const resultText =response?.candidates[0]?.content?.parts[0]?.text;
@@ -98,6 +101,8 @@ export const NoteView = () => {
             setAnalysis(resultJSON);
         } catch (error) {
             console.error("Error al parsear el JSON:", error);
+        } finally {
+            setIsAnalyzing(false);
         }
     }, [body]);
     
@@ -107,7 +112,7 @@ export const NoteView = () => {
         direction='row' 
         justifyContent='space-between' 
         sx={{ 
-            mb: 1 , 
+            mb: 5 , 
             maxWidth: '1024px',
             ml: { xs: 0, md: '5%' },
             mr: { xs: 0, md: '5%' }
@@ -183,25 +188,35 @@ export const NoteView = () => {
         </Grid>
 
         <Grid container justifyContent='space-between' mt={2}>
-            <Button 
-                disabled={ isSaving || body.length == 0 || analysis == {} }
-                onClick={ handleAnalyze }
-                variant="outlined"
-                color='secondary' 
-                sx={(theme) => ({
-                    transition: 'all 0.2s ease-in-out',
-                    '&:hover': {
-                        backgroundColor: alpha(theme.palette.secondary.main, 0.2), 
-                        transform: 'scale(1.1)'
-                    },
-                    borderRadius: '10px',
-                    paddingX: { xs: 0, md: '1em' },
-                    marginRight: { xs: 0, md: '1em' }
-                })}
-            >
-                <PsychologyAlt sx={{ fontSize: '2em', mr: { xs: 0.5, md: 0.5 } }} />
-                {isMdOrLarger && 'Analizar'}
-            </Button>
+        <Button
+            disabled={isSaving || isAnalyzing}
+            onClick={handleAnalyze}
+            variant="outlined"
+            color="secondary"
+            sx={{
+                transition: 'all 0.2s ease-in-out',
+                borderRadius: '10px',
+                paddingX: { xs: 0, md: '1em' },
+                marginRight: { xs: 0, md: '1em' },
+                '&:hover': {
+                    backgroundColor: alpha(theme.palette.secondary.main, 0.2),
+                    transform: 'scale(1.1)',
+                },
+                marging: '0px'
+            }}
+        >
+            {isAnalyzing ? (
+                <CircularProgress
+                    size={20}
+                    color="inherit"
+                    sx={{ mr: isMdOrLarger ? 1 : 0 }}
+                />
+                ) : (
+                <PsychologyAlt sx={{ fontSize: '2em' }} />
+                )
+            }
+            {isAnalyzing ? isMdOrLarger ? 'Analizando...' : '' : isMdOrLarger ? 'Analizar' : ''}
+        </Button>
             <Box>
                 <Button 
                     disabled={ isSaving }
