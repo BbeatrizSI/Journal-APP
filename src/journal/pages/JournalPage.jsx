@@ -43,7 +43,7 @@ export const JournalPage = () => {
           '&:hover': {
                 color: theme.palette.secondary.main,
                 backgroundColor: alpha(theme.palette.secondary.main, 0.3), 
-                transform: 'scale(1.1)'
+                transform: 'translateX(-50%) scale(1.1)',
           },
         })}
       >
