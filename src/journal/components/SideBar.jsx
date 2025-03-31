@@ -6,8 +6,8 @@ import { useSelector, useDispatch } from "react-redux"
 import { SideBarItem } from "./SideBarItem";
 import { closeSidebar } from "../../store/sidebar";
 import DatePicker from 'react-date-picker';
-import 'react-date-picker/dist/DatePicker.css';
-import 'react-calendar/dist/Calendar.css';
+import '../../theme/DatePicker.css';
+import '../../theme/Calendar.css';
 
 
 export const SideBar = ({ drawerWidth = 240, mobileOpen }) => {
