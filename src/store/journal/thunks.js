@@ -6,10 +6,17 @@ import { fileUpload } from "../../helpers/fileUpload";
 
 export const startNewNote = () => {
     return async(  dispatch, getState ) => {
+        const { uid } = getState().auth;
+        const { active } = getState().journal;
+
+        // Evita crear otra si ya hay una activa vacía
+        if (active && !active.title && !active.body && active.imageUrls.length === 0) {
+            console.log("Ya hay una nota nueva activa, no creamos otra");
+            return;
+         }
 
         dispatch( savingNewNote());
         
-        const { uid } = getState().auth;
         
         const newNote = {
             title: '',
